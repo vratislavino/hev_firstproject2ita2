@@ -39,6 +39,23 @@ public class Symbol : MonoBehaviour
         symbol = newSymbol;
         quad.material = materials[(int) symbol];
     }
+
+    private void OnCollisionEnter(Collision collision) {
+        if (!isPlayer) return;
+
+        var enemySymbol = collision.gameObject.GetComponent<Symbol>();
+        
+        if (enemySymbol == null) return;
+
+        var enemy = enemySymbol.symbol;
+
+        Debug.Log(symbol + " : " + enemy);
+
+        var res = symbol.Beats(enemy);
+        if(res.HasValue && res.Value == true) {
+            Destroy(collision.gameObject);
+        }
+    }
 }
 
 public enum SymbolEnum
