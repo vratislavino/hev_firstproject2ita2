@@ -6,8 +6,12 @@ public class Symbol : MonoBehaviour
 {
     SymbolEnum symbol;
 
+    public SymbolEnum CurrentSymbol => symbol;
+
     [SerializeField]
     private bool isPlayer;
+
+    public bool IsPlayer => isPlayer;
 
     [SerializeField]
     private MeshRenderer quad;
@@ -16,7 +20,7 @@ public class Symbol : MonoBehaviour
     private List<Material> materials;
 
     void Start() {
-
+        
         ChangeSymbol(GetRandomSymbol());
 
         if (isPlayer) {
@@ -26,13 +30,13 @@ public class Symbol : MonoBehaviour
 
     IEnumerator GenerateRandomSymbolRoutine() {
         while (true) {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(5);
             ChangeSymbol(GetRandomSymbol());
         }
     }
 
     private SymbolEnum GetRandomSymbol() {
-        return (SymbolEnum)Random.Range(0, 3);
+        return (SymbolEnum) Random.Range(0, 3);
     }
 
     private void ChangeSymbol(SymbolEnum newSymbol) {
@@ -44,7 +48,7 @@ public class Symbol : MonoBehaviour
         if (!isPlayer) return;
 
         var enemySymbol = collision.gameObject.GetComponent<Symbol>();
-        
+
         if (enemySymbol == null) return;
 
         var enemy = enemySymbol.symbol;
@@ -52,7 +56,7 @@ public class Symbol : MonoBehaviour
         Debug.Log(symbol + " : " + enemy);
 
         var res = symbol.Beats(enemy);
-        if(res.HasValue && res.Value == true) {
+        if (res.HasValue && res.Value == true) {
             Destroy(collision.gameObject);
         }
     }
