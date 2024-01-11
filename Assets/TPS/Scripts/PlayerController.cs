@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
             yMovement = jumpForce;
         }
 
-        rb.velocity = new Vector3(hor * speed, yMovement, vert * speed);
+        Vector3 dir = (vert * transform.forward) + (hor * transform.right);
+
+        rb.velocity = new Vector3(dir.x * speed, yMovement, dir.z * speed);
     }
 }
