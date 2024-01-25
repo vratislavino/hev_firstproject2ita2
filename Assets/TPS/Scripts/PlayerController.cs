@@ -23,6 +23,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float sensitivity;
 
+    [SerializeField]
+    private Transform groundChecker;
+
+
     private bool isGrounded = true;
 
     void Start()
@@ -34,8 +38,19 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        UpdateGrounded();
         DoMovement();
         DoRotation();
+    }
+
+    private void UpdateGrounded()
+    {
+        if(Physics.Raycast(groundChecker.position, Vector3.down, 0.06f))
+        {
+            isGrounded = true;
+        } else {
+            isGrounded = false;
+        }
     }
 
     private void DoRotation()
