@@ -13,9 +13,12 @@ public class PlayerController : MonoBehaviour
     private Transform cameraHolder;
 
     private Rigidbody rb;
+    public Rigidbody Rb => rb;
 
     [SerializeField]
     private float speed;
+
+    private float envSpeedMultiplier = 1f;
 
     [SerializeField]
     private float jumpForce;
@@ -71,7 +74,7 @@ public class PlayerController : MonoBehaviour
     {
         float hor = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
-
+        float currentSpeed = speed;
         float yMovement = rb.velocity.y;
 
         bool jump = Input.GetButtonDown("Jump");
@@ -80,8 +83,19 @@ public class PlayerController : MonoBehaviour
             yMovement = jumpForce;
         }
 
+        if(Input.GetButton("Sprint"))
+        {
+            currentSpeed *= 1.5f;
+        }
+        currentSpeed *= envSpeedMultiplier;
+
         Vector3 dir = (vert * transform.forward) + (hor * transform.right);
 
-        rb.velocity = new Vector3(dir.x * speed, yMovement, dir.z * speed);
+        rb.velocity = new Vector3(dir.x * currentSpeed, yMovement, dir.z * currentSpeed);
+    }
+
+    public void ChangeEnvSpeedMultiplier(float mult)
+    {
+        envSpeedMultiplier = mult;
     }
 }
