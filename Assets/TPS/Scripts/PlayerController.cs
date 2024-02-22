@@ -4,7 +4,7 @@ using UnityEditorInternal;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamagable
 {
     private Vector3 rotation;
     private Vector3 cameraRotation;
@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     public Rigidbody Rb => rb;
+
+    public int HP { get; set; }
 
     [SerializeField]
     private float speed;
@@ -29,6 +31,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform groundChecker;
 
+    bool isHit = false;
+    [SerializeField]
+    private GameObject hitGraphics;
+    [SerializeField]
+    private float healInterval = 1;
+    private float healCooldown = 1;
 
     private bool isGrounded = true;
 
@@ -44,6 +52,17 @@ public class PlayerController : MonoBehaviour
         UpdateGrounded();
         DoMovement();
         DoRotation();
+
+        if(isHit)
+        {
+            healCooldown -= Time.deltaTime;
+            if(healCooldown <= 0)
+            {
+                isHit = false;
+                hitGraphics.SetActive(false);
+                healCooldown = healInterval;
+            }
+        }
     }
 
     private void UpdateGrounded()
@@ -97,5 +116,17 @@ public class PlayerController : MonoBehaviour
     public void ChangeEnvSpeedMultiplier(float mult)
     {
         envSpeedMultiplier = mult;
+    }
+
+    public void ApplyDamage(float dmg)
+    {
+        if(!isHit)
+        {
+            isHit = true;
+            hitGraphics.SetActive(true);
+        } else
+        {
+            Time.timeScale = 0;
+        }
     }
 }

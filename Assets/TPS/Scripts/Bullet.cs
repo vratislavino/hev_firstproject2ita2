@@ -13,6 +13,13 @@ public class Bullet : MonoBehaviour
         if(dmgableObject != null)
         {
             dmgableObject.ApplyDamage(20);
+        } else
+        {
+            dmgableObject = collision.collider.GetComponentInParent<IDamagable>();
+            if(dmgableObject != null)
+            {
+                dmgableObject.ApplyDamage(20);
+            }
         }
         Destroy(gameObject);
     }
